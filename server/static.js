@@ -76,7 +76,7 @@ module.exports = (app, config) => {
                     if (gzipped)
                         res.set('Content-Encoding', 'gzip');
                     res.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(downFileName)}`);
-                    res.sendFile(bookFile);
+                    res.sendFile(path.resolve(bookFile));
                     return;
                 } else {
                     await fs.remove(bookFile);
