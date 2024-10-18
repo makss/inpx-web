@@ -39,7 +39,7 @@ module.exports = (app, config) => {
             const fileType = req.params.fileType;
 
             if (path.extname(fileName) === '') {//восстановление файлов {hash}.raw, {hash}.zip
-                let bookFile = `${config.bookDir}/${fileName}`;
+                let bookFile = path.resolve(`${config.bookDir}/${fileName}`);
                 const bookFileDesc = `${bookFile}.d.json`;
 
                 //восстановим из json-файла описания
@@ -76,7 +76,7 @@ module.exports = (app, config) => {
                     if (gzipped)
                         res.set('Content-Encoding', 'gzip');
                     res.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(downFileName)}`);
-                    res.sendFile(path.resolve(bookFile));
+                    res.sendFile(bookFile);
                     return;
                 } else {
                     await fs.remove(bookFile);
