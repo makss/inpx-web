@@ -196,6 +196,30 @@ export default class BaseList {
                 //информация о книге
                 const response = await this.api.getBookInfo(book._uid);
                 this.$emit('listEvent', {action: 'bookInfo', data: response.bookInfo});
+            } else {
+                //external tools
+                let extType = action.match(/^ext-([0-9a-z]+)$/i);
+                if (extType && this.config.external[extType[1]]) {
+                    let ext = this.config.external[extType[1]];
+                    if (ext.type === "download") {
+                        href += '/' + action;
+                        await axios.head(href);
+                        const d = this.$refs.download;
+                        d.href = href;
+                        d.click();
+                    } else if (ext.type === "window") {
+                        const hrefUrl = new URL(href);
+                        let url = ext.link || this.config.bookReadLink;
+                        url = url.replace('${DOWNLOAD_LINK}', href)
+                            .replace('${DOWNLOAD_URI}', hrefUrl.pathname + hrefUrl.search + hrefUrl.hash);
+                        window.open(url, '_blank');
+                    } else {
+                        href += '/' + action;
+                        if (await axios.get(href)) {
+                            this.$root.notify.success(ext.title || extType[1]);
+                        }
+                    }
+                }
             }
         } catch(e) {
             this.$root.stdDialog.alert(e.message, 'Ошибка');
@@ -220,6 +244,7 @@ export default class BaseList {
             case 'copyLink':
             case 'readBook':
             case 'bookInfo':
+            case String(event.action.match(/^ext-.*/i)):
                 this.download(event.book, event.action);//no await
                 break;
         }
