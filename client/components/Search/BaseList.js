@@ -206,6 +206,7 @@ export default class BaseList {
                         await axios.head(href);
                         const d = this.$refs.download;
                         d.href = href;
+                        d.download = "";
                         d.click();
                     } else if (ext.type === "window") {
                         const hrefUrl = new URL(href);

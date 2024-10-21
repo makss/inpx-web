@@ -162,7 +162,11 @@ module.exports = (app, config) => {
                                 if (ext.type === "download") {
                                     if (!await fs.pathExists(extVar.RESULTFILE))
                                         throw new Error(`File not exists: '${extVar.RESULTFILE}'`);
+                                    //res.set('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(extVar.FILENAME)}`);
+                                    //res.set('Content-Type', 'application/octet-stream');
                                     res.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(extVar.FILENAME)}`);
+                                    res.set('Content-Length', fs.statSync(extVar.RESULTFILE).size);
+                                    res.set('Cache-Control', 'private');
                                     return res.sendFile(extVar.RESULTFILE);
                                 }
                                 return res.end();
