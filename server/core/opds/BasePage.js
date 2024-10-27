@@ -53,7 +53,7 @@ class BasePage {
     }
 
     makeLink(attrs) {
-        attrs.href = this.escape(attrs.href);
+        attrs.href = this.escape(this.config.opds.host + attrs.href);
         return {'*ATTRS': attrs};
     }
 
@@ -124,6 +124,12 @@ class BasePage {
 
         if (!content.link)
             base.link = this.baseLinks(req);
+
+//base['opensearch:totalResults'] = [];
+base['opensearch:totalResults'] = 7;
+console.log(base);
+console.log(content);
+
 
         const xml = new XmlParser();
         const xmlObject = {};        

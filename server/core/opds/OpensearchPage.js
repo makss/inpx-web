@@ -4,6 +4,7 @@ const XmlParser = require('../xml/XmlParser');
 class OpensearchPage extends BasePage {
     constructor(config) {
         super(config);
+        this.config = config;
 
         this.id = 'opensearch';
         this.title = 'opensearch';
@@ -31,7 +32,7 @@ class OpensearchPage extends BasePage {
             Url: {
                 '*ATTRS': {
                     type: 'application/atom+xml;profile=opds-catalog;kind=navigation',
-                    template: `${this.opdsRoot}/search?term={searchTerms}`,
+                    template: this.config.opds.host + `${this.opdsRoot}/search?term={searchTerms}`,
                 },
             },
         }

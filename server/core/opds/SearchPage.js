@@ -14,11 +14,12 @@ class SearchPage extends BasePage {
         const result = {};
 
         const query = {
-            type: req.query.type || '',
+            type: req.query.type || 'title',
             term: req.query.term || '',
             genre: req.query.genre || '',
             page: parseInt(req.query.page, 10) || 1,
         };
+        this.id = 'search-' + query.term;
 
         let entry = [];
         if (query.type) {
@@ -44,12 +45,18 @@ class SearchPage extends BasePage {
                         const row = found[i];
                         if (!row.bookCount)
                             continue;
-
+console.log(row);
                         entry.push(
                             this.makeEntry({
                                 id: row.id,
                                 title: `${(from === 'series' ? 'Серия: ': '')}${from === 'author' ? this.bookAuthor(row[from]) : row[from]}`,
-                                link: this.navLink({href: `/${from}?${from}==${encodeURIComponent(row[from])}`}),
+                                //link: this.navLink({href: `/${from}?${from}==${encodeURIComponent(row[from])}`}),
+                                link: this.makeLink({
+            href: '/qqq.fb2',
+            rel: 'http://opds-spec.org/acquisition',
+            type: "application/fb2+zip",
+        }),
+                                summary: 'ss' +row.id,
                                 content: {
                                     '*ATTRS': {type: 'text'},
                                     '*TEXT': `${row.bookCount} книг${utils.wordEnding(row.bookCount, 8)}`,

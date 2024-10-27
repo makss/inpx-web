@@ -150,6 +150,7 @@ class BookPage extends BasePage {
                 const formats = {
                     [`${ext}+zip`]: `${bookInfo.link}/zip`,
                     [ext]: bookInfo.link,
+                    ['epub']: bookInfo.link + `/ext-epub`,
                 };
 
                 if (ext === 'mobi') {
