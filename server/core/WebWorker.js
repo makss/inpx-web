@@ -11,6 +11,7 @@ const DbCreator = require('./DbCreator');
 const DbSearcher = require('./DbSearcher');
 const InpxHashCreator = require('./InpxHashCreator');
 const RemoteLib = require('./RemoteLib');//singleton
+const RemoteLib2 = require('./RemoteLib2');//singleton
 const FileDownloader = require('./FileDownloader');
 
 const asyncExit = new (require('./AsyncExit'))();
@@ -45,6 +46,11 @@ class WebWorker {
             this.remoteLib = null;
             if (config.remoteLib) {
                 this.remoteLib = new RemoteLib(config);
+            }
+
+            this.remoteLib2 = null;
+            if (config.remoteLib2) {
+                this.remoteLib2 = new RemoteLib2(config);
             }
             
             this.inpxHashCreator = new InpxHashCreator(config);
@@ -431,7 +437,11 @@ class WebWorker {
         let hash = '';
 
         if (!this.remoteLib) {
-            extractedFile = await this.extractBook(libFolder, libFile);
+            if (await fs.pathExists(`${this.config.libDir}/${libFolder}`)) {
+                extractedFile = await this.extractBook(libFolder, libFile);
+            } else if (this.remoteLib2) {//failback local storage
+                extractedFile = await this.remoteLib2.getRemoteBook(bookUid, libFolder, libFile);
+            }
             hash = await utils.getFileHash(extractedFile, 'sha256', 'hex');
         } else {
             hash = await this.remoteLib.downloadBook(bookUid);

@@ -56,6 +56,8 @@ module.exports = {
     },
     */
 
+    remoteLib2: false,
+
     server: {
         host: '0.0.0.0',
         port: '22380',

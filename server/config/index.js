@@ -32,6 +32,7 @@ const propsToSave = [
     'fullOptimization',
     'allowRemoteLib',
     'remoteLib',
+    'remoteLib2',
     'server',
     'opds',
     'latestReleaseLink',
